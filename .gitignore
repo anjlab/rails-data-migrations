@@ -10,3 +10,4 @@
 /.idea/
 spec/db/
 gemfiles/
+*.gem
