@@ -2,7 +2,7 @@
 
 ## Why?
 
-Have you ever tun into a problem when alongside with DB schema migrations (managed by `rake db:migrate` in Rails)
+Have you ever run into a problem when alongside with DB schema migrations (managed by `rake db:migrate` in Rails)
 you have to often change your DB content, as well? If you read this, you probably tried to use schema migrations do change your data after schema changes, but this is not a recommended way and sometimes data changes could take a long time, so they will block your app at the deploy time.
 Another approach is to use [rake tasks](https://robots.thoughtbot.com/data-migrations-in-rails) to run your changes after `db:migrate` or even independently. But this could also become a mess after some time if you have multiple developers in your project, and you need to change your data often.
 
