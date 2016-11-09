@@ -46,7 +46,12 @@ describe RailsDataMigrations do
       Rake::Task.define_task(:environment)
     end
 
-    it 'list pending migrations' do
+    it 'lists pending migrations' do
+      load_rake_rasks
+      expect { Rake::Task['data:migrate:pending'].execute }.not_to raise_error
+    end
+
+    it 'list migration file' do
       expect(RailsDataMigrations::Migrator.migrations(RailsDataMigrations::Migrator.migrations_path).size).to eq(1)
     end
 
@@ -69,19 +74,6 @@ describe RailsDataMigrations do
 
       expect { Rake::Task['data:migrate:up'].execute}.to raise_error(RuntimeError, 'VERSION is required')
       expect { Rake::Task['data:migrate:down'].execute}.to raise_error(RuntimeError, 'VERSION is required')
-    end
-
-    it 'applies single migration by its VERSION' do
-      expect(RailsDataMigrations::LogEntry.count).to eq(0)
-
-      ENV['VERSION'] = '20161101020304'
-      load_rake_rasks
-
-      2.times do
-        Rake::Task['data:migrate:up'].execute
-        expect(RailsDataMigrations::Migrator.current_version).to eq(ENV['VERSION'].to_i)
-        expect(RailsDataMigrations::LogEntry.count).to eq(1)
-      end
     end
   end
 end

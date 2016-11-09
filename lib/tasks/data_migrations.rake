@@ -47,5 +47,15 @@ namespace :data do
         puts "data migration #{version} was skipped."
       end
     end
+
+    desc 'List pending migrations'
+    task pending: :init_migration do
+      puts "#{'% 16s' % 'Migration ID'}  Migration Name"
+      puts '--------------------------------------------------'
+      migrator = RailsDataMigrations::Migrator
+      migrator.open(migrator.migrations_path).pending_migrations.each do |m|
+        puts "#{'% 16i' % m.version}  #{m.name}"
+      end
+    end
   end
 end
