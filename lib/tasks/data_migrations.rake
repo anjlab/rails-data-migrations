@@ -54,7 +54,7 @@ namespace :data do
       puts '--------------------------------------------------'
       migrator = RailsDataMigrations::Migrator
       migrator.open(migrator.migrations_path).pending_migrations.each do |m|
-        puts "#{'% 16i' % m.version}  #{m.name}"
+        puts "#{'% 16i' % m.version}  #{m.name.to_s.titleize}"
       end
     end
   end
