@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe RailsDataMigrations do
   it 'checks for migration log table existence' do
-    expect(ActiveRecord::Base.connection.data_source_exists?(RailsDataMigrations::LogEntry.table_name)).to be_truthy
+    expect(RailsDataMigrations::Migrator.migrations_table_exists?(ActiveRecord::Base.connection)).to be_truthy
     expect(RailsDataMigrations::Migrator.get_all_versions).to be_blank
   end
 
