@@ -13,7 +13,8 @@ module RailsDataMigrations
 
     class << self
       def get_all_versions(connection = ActiveRecord::Base.connection)
-        if connection.data_source_exists?(schema_migrations_table_name)
+        table_check_method = connection.respond_to?(:data_source_exists?) ? :data_source_exists? : :table_exists?
+        if connection.send(table_check_method, schema_migrations_table_name)
           LogEntry.all.map { |x| x.version.to_i }.sort
         else
           []
