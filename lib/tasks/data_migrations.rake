@@ -16,11 +16,10 @@ namespace :data do
 
   desc 'Apply pending data migrations'
   task migrate: :init_migration do
-    filter = RailsDataMigrations::Migrator.current_version
-    versions = RailsDataMigrations::Migrator.migrations(migrations_path)
-                 .select { |migration| migration.version > filter }
-                 .map(&:version)
-    versions.sort.each do |version|
+    source_versions = RailsDataMigrations::Migrator.migrations(migrations_path).collect(&:version)
+    applied_versions = RailsDataMigrations::Migrator.get_all_versions
+
+    (source_versions - applied_versions).sort.each do |version|
       apply_single_migration(:up, version)
     end
   end
