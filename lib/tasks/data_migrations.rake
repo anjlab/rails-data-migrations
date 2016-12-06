@@ -1,4 +1,5 @@
 require 'rake'
+require 'rails-data-migrations'
 
 namespace :data do
   def migrations_path
@@ -21,6 +22,30 @@ namespace :data do
 
     (source_versions - applied_versions).sort.each do |version|
       apply_single_migration(:up, version)
+    end
+  end
+
+  namespace :install do
+    desc 'Copies missing data migrations from Railties (e.g. engines)'
+    task migrations: :init_migration do
+      railties = Rails.application.railties.each_with_object({}) do |railtie, railties|
+        if railtie.respond_to?(:paths)
+          data_migrations_path = railtie.root.join(RailsDataMigrations::Migrator.migrations_path)
+          if data_migrations_path.exist?
+            railties[railtie.railtie_name] = data_migrations_path.to_s
+          end
+        end
+      end
+
+      on_copy = Proc.new do |name, migration|
+        puts "Copied data migration #{migration.basename} from #{name}"
+      end
+
+      ActiveRecord::DataMigration.copy(
+        RailsDataMigrations::Migrator.migrations_path,
+        railties,
+        on_copy: on_copy
+      )
     end
   end
 
