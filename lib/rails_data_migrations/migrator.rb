@@ -1,5 +1,6 @@
 module RailsDataMigrations
   class Migrator < ::ActiveRecord::Migrator
+    MIGRATOR_SALT = 2053462855
 
     def record_version_state_after_migrating(version)
       if down?
