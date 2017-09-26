@@ -24,6 +24,16 @@ namespace :data do
     end
   end
 
+  desc 'Mark all pending data migrations complete'
+  task reset: :init_migration do
+    source_versions = RailsDataMigrations::Migrator.migrations(migrations_path).collect(&:version)
+    applied_versions = RailsDataMigrations::Migrator.get_all_versions
+
+    (source_versions - applied_versions).sort.each do |version|
+      RailsDataMigrations::LogEntry.create!(version: version.to_s)
+    end
+  end
+
   namespace :migrate do
     desc 'Apply single data migration using VERSION'
     task up: :init_migration do
