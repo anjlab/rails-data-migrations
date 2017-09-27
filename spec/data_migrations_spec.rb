@@ -75,5 +75,14 @@ describe RailsDataMigrations do
       expect { Rake::Task['data:migrate:up'].execute}.to raise_error(RuntimeError, 'VERSION is required')
       expect { Rake::Task['data:migrate:down'].execute}.to raise_error(RuntimeError, 'VERSION is required')
     end
+
+    it 'marks pending migrations complete without running them' do
+      load_rake_rasks
+
+      allow(RailsDataMigrations::Migrator).to receive(:run) { true }
+      Rake::Task['data:reset'].execute
+      expect(RailsDataMigrations::LogEntry.count).to eq(1)
+      expect(RailsDataMigrations::Migrator).not_to have_received(:run)
+    end
   end
 end
