@@ -1,6 +1,7 @@
 # Rails Data Migrations
 
 [![Build Status](https://travis-ci.org/OffgridElectric/rails-data-migrations.svg?branch=master)](https://travis-ci.org/OffgridElectric/rails-data-migrations)
+[![Gem Version](https://badge.fury.io/rb/rails-data-migrations.svg)](https://badge.fury.io/rb/rails-data-migrations)
 
 ## Why?
 
