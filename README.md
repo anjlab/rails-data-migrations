@@ -1,5 +1,7 @@
 # Rails Data Migrations
 
+[![Build Status](https://travis-ci.org/OffgridElectric/rails-data-migrations.svg?branch=master)](https://travis-ci.org/OffgridElectric/rails-data-migrations)
+
 ## Why?
 
 Have you ever run into a problem when alongside with DB schema migrations (managed by `rake db:migrate` in Rails)
