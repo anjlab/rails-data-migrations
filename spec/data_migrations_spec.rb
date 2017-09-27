@@ -12,9 +12,9 @@ describe RailsDataMigrations do
   end
 
   context 'generator' do
-    let (:migration_name) { 'test_migration' }
+    let(:migration_name) { 'test_migration' }
 
-    let (:file_name) { 'spec/db/data-migrations/20161031000000_test_migration.rb' }
+    let(:file_name) { 'spec/db/data-migrations/20161031000000_test_migration.rb' }
 
     before(:each) do
       allow(Time).to receive(:now).and_return(Time.utc(2016, 10, 31))
@@ -27,7 +27,9 @@ describe RailsDataMigrations do
     end
 
     it 'creates valid migration class' do
+      # rubocop:disable Security/Eval
       eval(File.open(file_name).read)
+      # rubocop:enable Security/Eval
       klass = migration_name.classify.constantize
       expect(klass.superclass).to eq(ActiveRecord::DataMigration)
       expect(klass.instance_methods(false)).to eq([:up])
@@ -36,7 +38,7 @@ describe RailsDataMigrations do
 
   context 'migrator' do
     before(:each) do
-      allow(Time).to receive(:now).and_return(Time.utc(2016, 11, 01, 02, 03, 04))
+      allow(Time).to receive(:now).and_return(Time.utc(2016, 11, 1, 2, 3, 4))
 
       Rails::Generators.invoke('data_migration', ['test'])
     end
@@ -72,8 +74,8 @@ describe RailsDataMigrations do
 
       load_rake_rasks
 
-      expect { Rake::Task['data:migrate:up'].execute}.to raise_error(RuntimeError, 'VERSION is required')
-      expect { Rake::Task['data:migrate:down'].execute}.to raise_error(RuntimeError, 'VERSION is required')
+      expect { Rake::Task['data:migrate:up'].execute }.to raise_error(RuntimeError, 'VERSION is required')
+      expect { Rake::Task['data:migrate:down'].execute }.to raise_error(RuntimeError, 'VERSION is required')
     end
 
     it 'marks pending migrations complete without running them' do

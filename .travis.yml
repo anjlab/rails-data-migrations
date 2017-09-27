@@ -2,4 +2,4 @@ sudo: false
 language: ruby
 rvm:
   - 2.3.4
-script: appraisal install && appraisal rake
+script: appraisal install && appraisal rake && rubocop --fail-level R

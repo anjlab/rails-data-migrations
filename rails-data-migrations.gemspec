@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Sergey Glukhov']
   spec.email         = ['sergey.glukhov@gmail.com']
 
-  spec.summary       = %q{Run your data migration tasks in a db:migrate-like manner}
+  spec.summary       = 'Run your data migration tasks in a db:migrate-like manner'
   spec.homepage      = 'https://github.com/OffgridElectric/rails-data-migrations'
   spec.license       = 'MIT'
 
