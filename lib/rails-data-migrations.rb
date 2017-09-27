@@ -1,4 +1,5 @@
 # rubocop:disable Naming/FileName
+require 'rails'
 require 'active_record'
 require 'active_record/data_migration'
 require 'rails_data_migrations/version'
