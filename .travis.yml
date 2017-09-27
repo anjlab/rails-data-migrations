@@ -2,5 +2,4 @@ sudo: false
 language: ruby
 rvm:
   - 2.3.4
-before_install: gem install bundler -v 1.13.6
 script: appraisal install && appraisal rake
