@@ -1,13 +1,13 @@
 require 'rake'
 
 namespace :data do
-  def migrations_path
-    RailsDataMigrations::Migrator.migrations_path
-  end
-
   def apply_single_migration(direction, version)
     raise 'VERSION is required' unless version
-    RailsDataMigrations::Migrator.run(direction, migrations_path, version.to_i)
+    RailsDataMigrations::Migrator.run_migration(
+      direction,
+      RailsDataMigrations::Migrator.migrations_path,
+      version.to_i
+    )
   end
 
   task init_migration: :environment do
@@ -16,21 +16,15 @@ namespace :data do
 
   desc 'Apply pending data migrations'
   task migrate: :init_migration do
-    source_versions = RailsDataMigrations::Migrator.migrations(migrations_path).collect(&:version)
-    applied_versions = RailsDataMigrations::Migrator.get_all_versions
-
-    (source_versions - applied_versions).sort.each do |version|
-      apply_single_migration(:up, version)
+    RailsDataMigrations::Migrator.list_pending_migrations.sort_by(&:version).each do |m|
+      apply_single_migration(:up, m.version)
     end
   end
 
   desc 'Mark all pending data migrations complete'
   task reset: :init_migration do
-    source_versions = RailsDataMigrations::Migrator.migrations(migrations_path).collect(&:version)
-    applied_versions = RailsDataMigrations::Migrator.get_all_versions
-
-    (source_versions - applied_versions).sort.each do |version|
-      RailsDataMigrations::LogEntry.create!(version: version.to_s)
+    RailsDataMigrations::Migrator.list_pending_migrations.each do |m|
+      RailsDataMigrations::LogEntry.create!(version: m.version.to_s)
     end
   end
 
@@ -61,8 +55,7 @@ namespace :data do
     task pending: :init_migration do
       puts "#{format('% 16s', 'Migration ID')}  Migration Name"
       puts '--------------------------------------------------'
-      migrator = RailsDataMigrations::Migrator
-      migrator.open(migrator.migrations_path).pending_migrations.each do |m|
+      RailsDataMigrations::Migrator.list_pending_migrations.each do |m|
         puts "#{format('% 16i', m.version)}  #{m.name.to_s.titleize}"
       end
     end

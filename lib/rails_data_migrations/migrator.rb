@@ -26,12 +26,45 @@ module RailsDataMigrations
         end
       end
 
+      def current_version
+        get_all_versions.max || 0
+      end
+
       def schema_migrations_table_name
         LogEntry.table_name
       end
 
       def migrations_path
         'db/data_migrations'
+      end
+
+      def rails_5_2?
+        Rails::VERSION::MAJOR > 5 || (Rails::VERSION::MAJOR == 5 && Rails::VERSION::MINOR >= 2)
+      end
+
+      def list_migrations
+        if rails_5_2?
+          ::ActiveRecord::MigrationContext.new(migrations_path).migrations
+        else
+          migrations(migrations_path)
+        end
+      end
+
+      def list_pending_migrations
+        if rails_5_2?
+          already_migrated = get_all_versions
+          list_migrations.reject { |m| already_migrated.include?(m.version) }
+        else
+          open(migrations_path).pending_migrations
+        end
+      end
+
+      def run_migration(direction, migrations_path, version)
+        if rails_5_2?
+          new(direction, list_migrations, version).run
+        else
+          run(direction, migrations_path, version)
+        end
       end
     end
   end

@@ -54,7 +54,7 @@ describe RailsDataMigrations do
     end
 
     it 'list migration file' do
-      expect(RailsDataMigrations::Migrator.migrations(RailsDataMigrations::Migrator.migrations_path).size).to eq(1)
+      expect(RailsDataMigrations::Migrator.list_migrations.size).to eq(1)
     end
 
     it 'applies pending migrations only once' do
