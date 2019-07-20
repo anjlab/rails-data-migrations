@@ -36,6 +36,31 @@ rake data:migrate
  
 This will run all pending data migrations and store migration history in `data_migrations` table. You're all set.
 
+If you need to generate migrations that can be run separately from data_migrations you can create Pre Migrations
+
+To create a pre data migration you need to run:
+```
+rails generate pre_data_migration migration_name
+```
+
+and this will create a `pre_migration_name.rb` file in `db/data_migrations` folder with a following content:
+```ruby
+class PreMigrationName < DataMigration
+  def up
+    # put your code here
+  end
+end
+```
+ 
+so all we need to do is to put some ruby code inside the `up` method.
+ 
+Finally, at the release time, you need to run 
+```
+rake data:migrate:pre
+```
+ 
+This will run all pending pre data migrations and store migration history in `data_migrations` table. You're all set.
+
 ## Rails Support
 
 Rails 4.0 and higher

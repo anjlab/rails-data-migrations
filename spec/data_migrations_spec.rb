@@ -14,33 +14,62 @@ describe RailsDataMigrations do
   context 'generator' do
     let(:migration_name) { 'test_migration' }
 
-    let(:file_name) { 'spec/db/data-migrations/20161031000000_test_migration.rb' }
+    context 'regular migration' do
+      let(:file_name) { 'spec/db/data-migrations/20161031000000_test_migration.rb' }
 
-    before(:each) do
-      allow(Time).to receive(:now).and_return(Time.utc(2016, 10, 31))
-      Rails::Generators.invoke('data_migration', [migration_name])
+      before(:each) do
+        allow(Time).to receive(:now).and_return(Time.utc(2016, 10, 31))
+        Rails::Generators.invoke('data_migration', [migration_name])
+      end
+
+      it 'creates non-empty migration file' do
+        expect(File.exist?(file_name)).to be_truthy
+        expect(File.size(file_name)).to be > 0
+      end
+
+      it 'creates valid migration class' do
+        # rubocop:disable Security/Eval
+        eval(File.open(file_name).read)
+        # rubocop:enable Security/Eval
+        klass = migration_name.classify.constantize
+        expect(klass.superclass).to eq(ActiveRecord::DataMigration)
+        expect(klass.instance_methods(false)).to eq([:up])
+      end
     end
 
-    it 'creates non-empty migration file' do
-      expect(File.exist?(file_name)).to be_truthy
-      expect(File.size(file_name)).to be > 0
-    end
+    context 'pre migration' do
+      let(:file_name) { 'spec/db/data-migrations/20190131000000_pre_test_migration.rb' }
 
-    it 'creates valid migration class' do
-      # rubocop:disable Security/Eval
-      eval(File.open(file_name).read)
-      # rubocop:enable Security/Eval
-      klass = migration_name.classify.constantize
-      expect(klass.superclass).to eq(ActiveRecord::DataMigration)
-      expect(klass.instance_methods(false)).to eq([:up])
+      before(:each) do
+        allow(Time).to receive(:now).and_return(Time.utc(2019, 1, 31))
+        Rails::Generators.invoke('pre_data_migration', [migration_name])
+      end
+
+      it 'creates non-empty pre migration file' do
+        expect(File.exist?(file_name)).to be_truthy
+        expect(File.size(file_name)).to be > 0
+      end
+
+      it 'creates valid pre migration class' do
+        # rubocop:disable Security/Eval
+        eval(File.open(file_name).read)
+        # rubocop:enable Security/Eval
+        klass = "pre_#{migration_name}".classify.constantize
+        expect(klass.superclass).to eq(ActiveRecord::DataMigration)
+        expect(klass.instance_methods(false)).to eq([:up])
+      end
     end
   end
 
   context 'migrator' do
     before(:each) do
-      allow(Time).to receive(:now).and_return(Time.utc(2016, 11, 1, 2, 3, 4))
+      allow(Time).to receive(:now).and_return(
+        Time.utc(2016, 11, 1, 2, 3, 4),
+        Time.utc(2019, 1, 1, 2, 3, 14)
+      )
 
       Rails::Generators.invoke('data_migration', ['test'])
+      Rails::Generators.invoke('pre_data_migration', ['test'])
     end
 
     def load_rake_rasks
@@ -54,7 +83,7 @@ describe RailsDataMigrations do
     end
 
     it 'list migration file' do
-      expect(RailsDataMigrations::Migrator.list_migrations.size).to eq(1)
+      expect(RailsDataMigrations::Migrator.list_migrations.size).to eq(2)
     end
 
     it 'applies pending migrations only once' do
@@ -67,6 +96,17 @@ describe RailsDataMigrations do
         expect(RailsDataMigrations::Migrator.current_version).to eq(20161101020304)
         expect(RailsDataMigrations::LogEntry.count).to eq(1)
       end
+    end
+
+    it 'applies pending pre migrations' do
+      expect(RailsDataMigrations::LogEntry.count).to eq(0)
+
+      load_rake_rasks
+
+      Rake::Task['data:migrate:pre'].execute
+
+      expect(RailsDataMigrations::Migrator.current_version).to eq(20190101020314)
+      expect(RailsDataMigrations::LogEntry.count).to eq(1)
     end
 
     it 'requires VERSION to run a single migration' do
