@@ -2,6 +2,7 @@
 
 ![Build](https://github.com/OffgridElectric/rails-data-migrations/workflows/Test/badge.svg?branch=master)
 ![Rubocop](https://github.com/OffgridElectric/rails-data-migrations/workflows/Rubocop/badge.svg?branch=master)
+[![Gem Version](https://badge.fury.io/rb/rails-data-migrations.svg)](https://badge.fury.io/rb/rails-data-migrations)
 
 ## Why?
 
