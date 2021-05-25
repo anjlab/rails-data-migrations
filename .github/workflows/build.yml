@@ -2,30 +2,54 @@ name: Build
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+
   pull_request:
-    branches: [ master ]
+    branches:
+      - master
 
 jobs:
-  test:
-    name: Test
+  test_and_lint:
+    name: Test & Lint
 
     runs-on: ubuntu-latest
 
+    timeout-minutes: 15
+
     strategy:
       matrix:
-        ruby-version: [2.3, 2.4, 2.5, 2.6, 2.7]
+        ruby-version: [2.3, 2.4, 2.5, 2.6, 2.7, 3.0]
 
     steps:
+      - name: Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.5.0
+        with:
+          access_token: ${{ github.token }}
+
       - uses: actions/checkout@v2
 
       - name: Set up Ruby ${{ matrix.ruby-version }}
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby-version }}
+          bundler: 1
+
+      - uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-bundle-${{ matrix.ruby-version }}-v1-${{ hashFiles('rails-data-migrations.gemspec', 'Appraisals') }}
+          restore-keys: |
+            ${{ runner.os }}-bundle-${{ matrix.ruby-version }}-v1-
 
       - name: Install dependencies
-        run: bundle install && appraisal install
+        run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+          bundle exec appraisal install --path vendor/bundle
 
       - name: Run tests
-        run: appraisal rake
+        run: bundle exec appraisal rake
+
+      - name: Run rubocop
+        run: bundle exec rubocop --parallel --fail-level R
