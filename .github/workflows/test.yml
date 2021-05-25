@@ -1,4 +1,4 @@
-name: Build
+name: Test
 
 on:
   push:
@@ -10,9 +10,7 @@ on:
       - master
 
 jobs:
-  test_and_lint:
-    name: Test & Lint
-
+  test:
     runs-on: ubuntu-latest
 
     timeout-minutes: 15
