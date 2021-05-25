@@ -11,6 +11,8 @@ on:
 
 jobs:
   test:
+    name: Test
+
     runs-on: ubuntu-latest
 
     timeout-minutes: 15
@@ -36,9 +38,9 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-bundle-${{ matrix.ruby-version }}-v1-${{ hashFiles('rails-data-migrations.gemspec', 'Appraisals') }}
+          key: ${{ runner.os }}-bundle-${{ matrix.ruby-version }}-v2-${{ hashFiles('rails-data-migrations.gemspec', 'Appraisals') }}
           restore-keys: |
-            ${{ runner.os }}-bundle-${{ matrix.ruby-version }}-v1-
+            ${{ runner.os }}-bundle-${{ matrix.ruby-version }}-v2-
 
       - name: Install dependencies
         run: |
