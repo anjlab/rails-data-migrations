@@ -50,6 +50,3 @@ jobs:
 
       - name: Run tests
         run: bundle exec appraisal rake
-
-      - name: Run rubocop
-        run: bundle exec rubocop --parallel --fail-level R
