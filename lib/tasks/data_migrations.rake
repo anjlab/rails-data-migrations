@@ -34,6 +34,13 @@ namespace :data do
       apply_single_migration(:up, ENV['VERSION'])
     end
 
+    desc 'Apply pre data migrations'
+    task pre: :init_migration do
+      RailsDataMigrations::Migrator.list_pending_pre_migrations.sort_by(&:version).each do |m|
+        apply_single_migration(:up, m.version)
+      end
+    end
+
     desc 'Revert single data migration using VERSION'
     task down: :init_migration do
       apply_single_migration(:down, ENV['VERSION'])

@@ -59,9 +59,22 @@ module RailsDataMigrations
       def list_pending_migrations
         if rails_5_2?
           already_migrated = get_all_versions
-          list_migrations.reject { |m| already_migrated.include?(m.version) }
+          list_migrations
+            .reject { |m| already_migrated.include?(m.version) }
+            .reject { |m| m.filename.match(/\d{14}_pre_/) }
         else
-          open(migrations_path).pending_migrations
+          open(migrations_path).pending_migrations.reject { |m| m.filename.match(/\d{14}_pre_/) }
+        end
+      end
+
+      def list_pending_pre_migrations
+        if rails_5_2?
+          already_migrated = get_all_versions
+          list_migrations
+            .reject { |m| already_migrated.include?(m.version) }
+            .select { |m| m.filename.match(/\d{14}_pre_/) }
+        else
+          open(migrations_path).pending_migrations.select { |m| m.filename.match(/\d{14}_pre_/) }
         end
       end
 
