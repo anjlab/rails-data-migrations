@@ -35,7 +35,7 @@ module RailsDataMigrations
       end
 
       def migrations_path
-        'db/data_migrations'
+        ENV.fetch('DATA_MIGRATIONS_PATH', 'db/data_migrations')
       end
 
       def rails_6_0?
