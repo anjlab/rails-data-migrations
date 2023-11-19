@@ -46,8 +46,14 @@ module RailsDataMigrations
         Rails::VERSION::MAJOR > 5 || (Rails::VERSION::MAJOR == 5 && Rails::VERSION::MINOR >= 2)
       end
 
+      def rails_7_1?
+        Rails::VERSION::MAJOR == 7 && Rails::VERSION::MINOR >= 1
+      end
+
       def list_migrations
-        if rails_6_0?
+        if rails_7_1?
+          ::ActiveRecord::MigrationContext.new(migrations_path, ::ActiveRecord::Base.connection.schema_migration).migrations
+        elsif rails_6_0?
           ::ActiveRecord::MigrationContext.new(migrations_path, ::ActiveRecord::SchemaMigration).migrations
         elsif rails_5_2?
           ::ActiveRecord::MigrationContext.new(migrations_path).migrations
@@ -66,7 +72,9 @@ module RailsDataMigrations
       end
 
       def run_migration(direction, migrations_path, version)
-        if rails_6_0?
+        if rails_7_1?
+          new(direction, list_migrations, ::ActiveRecord::Base.connection.schema_migration, ::ActiveRecord::InternalMetadata.new(ActiveRecord::Base.connection), version).run
+        elsif rails_6_0?
           new(direction, list_migrations, ::ActiveRecord::SchemaMigration, version).run
         elsif rails_5_2?
           new(direction, list_migrations, version).run
