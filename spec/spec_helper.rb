@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'rails/generators'
 require 'rake'
 
-$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
 require 'rails-data-migrations'
 
 ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: ':memory:'

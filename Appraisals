@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ruby_version = Gem::Version.new(RUBY_VERSION)
 
 if ruby_version < Gem::Version.new('2.7.0')
@@ -18,20 +20,24 @@ if ruby_version < Gem::Version.new('3.0.0')
 
   appraise 'rails-5.1' do
     gem 'rails', '~> 5.1.0'
+    gem 'sqlite3', '~> 1.3.6'
   end
 
   appraise 'rails-5.2' do
     gem 'rails', '~> 5.2.0'
+    gem 'sqlite3', '~> 1.3.6'
   end
 end
 
 if ruby_version >= Gem::Version.new('2.5.0')
   appraise 'rails-6.0' do
     gem 'rails', '~> 6.0.0'
+    gem 'sqlite3', '~> 1.4.0'
   end
 
   appraise 'rails-6.1' do
     gem 'rails', '~> 6.1.0'
+    gem 'sqlite3', '~> 1.4.0'
   end
 
   appraise 'rails-7.0' do

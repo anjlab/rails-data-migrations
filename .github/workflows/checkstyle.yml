@@ -3,7 +3,7 @@ name: Rubocop
 on:
   push:
     branches:
-      - master
+      - "*"
 
   pull_request:
     branches:
@@ -15,18 +15,20 @@ jobs:
 
     steps:
       - name: Cancel previous runs
-        uses: styfle/cancel-workflow-action@0.5.0
+        uses: styfle/cancel-workflow-action@0.12.1
         with:
           access_token: ${{ github.token }}
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Set up Ruby ${{ matrix.ruby-version }}
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7
-          bundler: 1
+          ruby-version: 3.2
           bundler-cache: true
 
+      - name: Install rubocop
+        run: gem install rubocop -v "~>1.63"
+
       - name: Run rubocop
-        run: bundle exec rubocop --parallel --fail-level R
+        run: rubocop --parallel --fail-level R

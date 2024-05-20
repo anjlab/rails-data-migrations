@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 require 'rake'
 
 namespace :data do
   def apply_single_migration(direction, version)
     raise 'VERSION is required' unless version
+
     RailsDataMigrations::Migrator.run_migration(
       direction,
       RailsDataMigrations::Migrator.migrations_path,
@@ -42,7 +45,8 @@ namespace :data do
     desc 'Skip single data migration using VERSION'
     task skip: :init_migration do
       version = ENV['VERSION'].to_i
-      raise 'VERSION is required' unless version > 0
+      raise 'VERSION is required' unless version.positive?
+
       if RailsDataMigrations::LogEntry.where(version: version).any?
         puts "data migration #{version} was already applied."
       else

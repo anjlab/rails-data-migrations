@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails/generators'
 require 'rails-data-migrations'
 
 class DataMigrationGenerator < Rails::Generators::NamedBase
-  source_root File.expand_path('../templates', __FILE__)
+  source_root File.expand_path('templates', __dir__)
 
   def create_migration_file
     migration_file_name =
