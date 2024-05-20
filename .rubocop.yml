@@ -10,11 +10,17 @@ Gemspec/RequiredRubyVersion:
 Layout/TrailingEmptyLines:
   Enabled: false
 
+Metrics/AbcSize:
+  Enabled: false
+
 Metrics/BlockLength:
   Enabled: false
 
 Metrics/LineLength:
   Max: 120
+
+Metrics/MethodLength:
+  Enabled: false
 
 Naming/FileName:
   Exclude:
