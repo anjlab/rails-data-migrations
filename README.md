@@ -1,7 +1,7 @@
 # Rails Data Migrations
 
-![Build](https://github.com/anjlab/rails-data-migrations/workflows/Test/badge.svg?branch=master)
-![Rubocop](https://github.com/anjlab/rails-data-migrations/workflows/Rubocop/badge.svg?branch=master)
+[![Build](https://github.com/anjlab/rails-data-migrations/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/anjlab/rails-data-migrations/actions/workflows/test.yml)
+[![Rubocop](https://github.com/anjlab/rails-data-migrations/actions/workflows/checkstyle.yml/badge.svg?branch=master)](https://github.com/anjlab/rails-data-migrations/actions/workflows/checkstyle.yml)
 [![Gem Version](https://badge.fury.io/rb/rails-data-migrations.svg)](https://badge.fury.io/rb/rails-data-migrations)
 
 ## Why?
