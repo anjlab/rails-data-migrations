@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe RailsDataMigrations do
@@ -44,7 +46,7 @@ describe RailsDataMigrations do
     end
 
     def load_rake_rasks
-      load File.expand_path('../../lib/tasks/data_migrations.rake', __FILE__)
+      load File.expand_path('../lib/tasks/data_migrations.rake', __dir__)
       Rake::Task.define_task(:environment)
     end
 

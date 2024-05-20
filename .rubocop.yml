@@ -2,8 +2,12 @@ AllCops:
   Exclude:
     - 'vendor/**/*'
     - 'gemfiles/**/*'
+  TargetRubyVersion: 2.7
 
-Layout/TrailingBlankLines:
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+
+Layout/TrailingEmptyLines:
   Enabled: false
 
 Metrics/BlockLength:
@@ -12,7 +16,14 @@ Metrics/BlockLength:
 Metrics/LineLength:
   Max: 120
 
+Naming/FileName:
+  Exclude:
+    - lib/rails-data-migrations.rb
+
 Style/Documentation:
+  Enabled: false
+
+Style/HashSyntax:
   Enabled: false
 
 Style/NumericLiterals:

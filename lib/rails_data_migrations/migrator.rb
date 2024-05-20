@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RailsDataMigrations
   class Migrator < ::ActiveRecord::Migrator
     MIGRATOR_SALT = 2053462855
@@ -61,7 +63,7 @@ module RailsDataMigrations
           already_migrated = get_all_versions
           list_migrations.reject { |m| already_migrated.include?(m.version) }
         else
-          open(migrations_path).pending_migrations
+          open(migrations_path).pending_migrations # rubocop:disable Security/Open
         end
       end
 

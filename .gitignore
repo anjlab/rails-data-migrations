@@ -10,4 +10,5 @@
 /.idea/
 spec/db/
 gemfiles/
+vendor/
 *.gem
